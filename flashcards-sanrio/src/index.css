@@ -30,8 +30,10 @@ button {
   font-weight: 500;
   font-family: inherit;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: background-color 0.3s, color 0.3s;
 }
+
 button:hover {
-  border-color: white;
+  color: #DC4A89; /* Change background color on hover */
+  background-color: #FFE5EC; /* Change text color on hover */
 }

@@ -10,10 +10,12 @@ html {
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-}
+} 
 
+/* DESCRIPTION */
 #title {
   font-family: 'Rubik Bubbles', cursive;
+  font-size: 2.5rem;
 }
 
 .description {
@@ -24,6 +26,9 @@ html {
 .numCards {
   font-family: 'Rubik Bubbles', cursive;
 }
+
+
+/* FORM AND ARROWS */
 
 .arrow {
   background-color: #DC4A89;
@@ -59,4 +64,16 @@ html {
   color: #FFE5EC;
   background-color: #DC4A89;
   font-size: 18px;
+}
+
+.shuffle {
+  font-family: 'Rubik Bubbles', cursive;
+  background-color: #FFE5EC;
+  color: #DC4A89;
+  font-size: 18px;
+}
+
+.shuffle:hover {
+  background-color: #DC4A89; /* Change background color on hover */
+  color: #FFE5EC; /* Change text color on hover */
 }

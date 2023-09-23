@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import Flashcard from './components/Flashcard'; // Import the Flashcard component
 
 const App = () => {
@@ -23,14 +23,35 @@ const App = () => {
   const [inputValue, setInputValue] = useState('');
   const [backgroundColor, setBackgroundColor] = useState('');
   const [color, setColor] = useState('');
+  const [shuffleDeck, setShuffleDeck] = useState(deck);
+
+  const shuffleTheDeck = (deck) => {
+    const shuffledDeck = [...deck.slice(1)]; // Copy the deck excluding the "Start" card
+    for (let i = shuffledDeck.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledDeck[i], shuffledDeck[j]] = [shuffledDeck[j], shuffledDeck[i]];
+    }
+    return [{ ...deck[0] }, ...shuffledDeck]; // Prepend a copy of the "Start" card to the shuffled deck
+  };
+  
+  useEffect(() => {
+    setShuffleDeck(shuffleTheDeck(shuffleDeck));
+  }, []);
+
+  const shuffle = () => {
+    setShuffleDeck(shuffleTheDeck(shuffleDeck));
+    setIndex(0); // Reset the index to the first card
+    setInputValue('');
+    setBackgroundColor('');
+    setColor('');
+  };
 
   const next = () => {
-    if (index < deck.length - 1) {
+    if (index < shuffleDeck.length - 1) {
       setIndex(index + 1);
       setInputValue(''); // Reset the input value
       setBackgroundColor(''); // Reset the background color
       setColor(''); // Reset the text color
-      setIsFlipped(false); // Reset card face to front
     }
   };
 
@@ -40,15 +61,18 @@ const App = () => {
       setInputValue(''); // Reset the input value
       setBackgroundColor(''); // Reset the background color
       setColor(''); // Reset the text color
-      setIsFlipped(false); // Reset card face to front
     }
   };
 
-  const currentCard = deck[index];
+  const currentCard = shuffleDeck[index];
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // do something with the input value, for example:
+
+    if (currentCard.front === "Start") {
+      return; // Do nothing and prevent guessing for the "Start" card
+    }
+
     if (inputValue !== currentCard.back) {
       setBackgroundColor('#CE1F54');
       setColor('#47363B');
@@ -70,15 +94,26 @@ const App = () => {
         <h3 className = "description">🎀 Test your Sanrio knowledge! 🎀</h3>
         <h4 className = "numCards">Number of Cards: 10</h4>
      </div>
-      <Flashcard front={currentCard.front} back={currentCard.back} />
+      <Flashcard front={currentCard.front} back={currentCard.back}/>
       <form className='form'>
       <label>
-            <input type="text" value={inputValue} onChange={handleChange} placeholder="Guess the Answer" style={{ color: color, backgroundColor: backgroundColor }} className = "answer"/>
-            </label>
+      <input
+            type="text"
+            value={inputValue}
+            onChange={handleChange}
+            placeholder="Guess the Answer"
+            style={{ color: color, backgroundColor: backgroundColor }}
+            className="answer"
+            // Disable the input field for the "Start" card
+            disabled={currentCard.front === "Start"}
+          /></label>
             <button type="submit" onClick={handleSubmit} className="submitAnswer">Submit</button>
             </form>
-            <button className='arrow' onClick={back}>←</button>
-            <button className='arrow' onClick={next}>→</button>
+            <div className='arrowButtons'>
+              <button className='arrow' onClick={back}>←</button>
+              <button className='arrow' onClick={next}>→</button>
+            </div>
+            <button className='shuffle' onClick={shuffle}>Shuffle</button>
     </div>
   );
 };
